@@ -1,8 +1,6 @@
-//Jiya Pandit
-//Assignment2
 
-
-//Header files
+// Jiya Pandit
+// Assignment2
 
 #include <iostream>
 #include <fstream>
@@ -10,102 +8,170 @@
 #include <sstream>
 
 
+struct STUDENT_DATA 
 
-//Creating the struct
-
-struct STUDENT_DATA
 {
     std::string FirstNameOfStudent;
 
     std::string LastNameOfStudent;
 
     std::string EmailAddressOfStudent;
+
 };
 
-int main()
+int main() 
+
 {
-   
+    
 #ifdef PRE_RELEASE
 
     std::cout << "Running in Pre-Release Mode" << std::endl;
 
-    std::ifstream file("StudentData_Emails.txt");  //This is because we want to use the email address of the students in the pre release mode
+    std::ifstream file("StudentData_Emails.txt");  // We are using the  email address of the students in pre-release mode
+
 #else
 
     std::cout << "Running in Standard Mode" << std::endl;
 
-    std::ifstream file("StudentData.txt"); 
+    std::ifstream file("StudentData.txt");  // We don't need email in this one
 
 #endif
 
-    std::string line;
-
     std::vector<STUDENT_DATA> Students;
 
-  
+    std::string line;
+
+    // Reading from the file
+
     if (file.is_open())
+    
     {
-       
-        for (; std::getline(file, line); )   //to get read and get data idf file is open
+        while (std::getline(file, line)) 
+        
         {
             std::istringstream ss(line);
+
 
             std::string FirstNameOfStudent, LastNameOfStudent, EmailAddressOfStudent;
 
 
 #ifdef PRE_RELEASE
 
-            if (std::getline(ss, FirstNameOfStudent, ',') && std::getline(ss, LastNameOfStudent, ',') && std::getline(ss, EmailAddressOfStudent))
+            // In pre-release, we have to do the first,last adn email addressof teh student
+
+
+            if (std::getline(ss, FirstNameOfStudent, ',') && std::getline(ss, LastNameOfStudent, ',') && std::getline(ss, EmailAddressOfStudent)) 
             
             {
-                STUDENT_DATA Student{ FirstNameOfStudent, LastNameOfStudent, EmailAddressOfStudent };  // Include email address of student in the  pre-release
+                STUDENT_DATA Student{ FirstNameOfStudent, LastNameOfStudent, EmailAddressOfStudent };
+
+                Students.push_back(Student);
+            }
+
 #else
+
+            // In standard, we only expect FirstName and LastName
+
+
             if (std::getline(ss, FirstNameOfStudent, ',') && std::getline(ss, LastNameOfStudent))
             
             {
-                STUDENT_DATA Student{ FirstNameOfStudent, LastNameOfStudent, "" };  // No email address in standard mode
-#endif
-                Students.push_back(Student);
+                STUDENT_DATA Student{ FirstNameOfStudent, LastNameOfStudent, "" }; // No email in standard version
 
+
+                Students.push_back(Student);
             }
+
+#endif
+
         }
 
-        file.close();   //this is for closing the file
+
+        file.close();
+
+
     }
-
-    else
-
+    else 
+    
     {
-        std::cerr << "Sorry, we are not able to open the file!!!" << std::endl;  // printing incase the file is not opened
+        std::cerr << "Sorry, we are not able to open the file!!!" << std::endl;
 
         return 1;  
+
     }
 
+    int counter = 1;  // Counter for numbering students
 
 
-    int counter = 1; // counter for numbering of students
+#ifdef _DEBUG
+
   
-    for (const auto& Student : Students)
-    {
-        //output displatying thenames of teh students
 
-        std::cout << counter <<" First Name:- " << Student.FirstNameOfStudent<< " Last Name:- " << Student.LastNameOfStudent << std::endl;
-
-        std::cout << std::endl;
 
 #ifdef PRE_RELEASE
 
-        std::cout << " Email: " << Student.EmailAddressOfStudent;  // Print email only in pre-release mode
+    
+    for (const auto& Student : Students)
+    
+    {
+        std::cout << counter << " First Name:- " << Student.FirstNameOfStudent << "       , Last Name:- " << Student.LastNameOfStudent << std::endl;
 
         std::cout << std::endl;
-#endif
+            
+        std::cout << " Email:- " << Student.EmailAddressOfStudent << std::endl;
+
         std::cout << std::endl;
 
         counter++;
-        
     }
 
 
+#else
+
+    //  Print only names
+
+    for (const auto& Student : Students)
+    
+    {
+        std::cout << counter << " First Name:- " << Student.FirstNameOfStudent<< "        , Last Name:- " << Student.LastNameOfStudent << std::endl;
+
+        std::cout << std::endl;
+
+        counter++;
+    }
+
+#endif
+
+
+#else
+
+  
+#ifdef PRE_RELEASE
+
+    //  It only prints the email address of the student in this mode
+
+
+    for (const auto& Student : Students) 
+    
+    {
+        std::cout << "Email:- " << Student.EmailAddressOfStudent << std::endl;
+
+        std::cout << std::endl;
+
+    }
+
+
+#else
+
+    std::cout << "Just running in Standard mode.\n";
+
+
+#endif
+
+
+#endif
+
     return 0;
+
 
 }
