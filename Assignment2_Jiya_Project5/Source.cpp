@@ -2,6 +2,8 @@
 //Assignment2
 
 
+//Header files
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -60,6 +62,8 @@ int main()
         return 1;  
     }
 
+#ifdef _DEBUG 
+
     int counter = 1; // counter for numbering of students
   
     for (const auto& Student : Students)
@@ -71,6 +75,7 @@ int main()
         counter++;
         
     }
+#endif
 
     return 0;
 
