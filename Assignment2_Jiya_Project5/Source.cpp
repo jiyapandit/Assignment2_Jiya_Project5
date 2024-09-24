@@ -8,6 +8,8 @@
 #include <sstream>
 
 
+#define PRE_RELEASE true   // Comment it if we want to disable the preprocessor prerelease
+
 struct STUDENT_DATA 
 
 {
